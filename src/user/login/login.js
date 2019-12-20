@@ -16,8 +16,6 @@ class Login extends Component {
     passwordOnChangeHandler = this.props.controlChangeHandlerFactory('password');
 
     submitHandler = (data) => {
-        const errors = this.props.getFormErrorState();
-        if (Object.keys(errors).length !== 0) { return; }
        
 
         UserService.login(data).then(() => {

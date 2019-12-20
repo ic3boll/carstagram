@@ -14,12 +14,12 @@ export default function withForm(Cmp, initialState, schema) {
                 const newValue = e.target.value;
 
                 if (id) { clearTimeout(id); id = null; }
-                id = setTimeout(() => {
+               
                     this.setState(({ form }) => {
                         return { form: { ...form, [name]: newValue } };
                     });
                     id = null;
-                }, 300);
+               
             };
         };
 

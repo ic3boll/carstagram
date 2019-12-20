@@ -7,6 +7,8 @@ import UserService from '../../services/user-services';
 
 class Register extends React.Component {
     state = {
+        balanceError: null,
+        imageUrl: null,
         hidden: true
     }
 
@@ -24,8 +26,12 @@ class Register extends React.Component {
        
         const data = this.props.getFormState();
      
-        UserService.register(data).then(() => {
+        UserService.register(data).then((res) => {
+            UserService.saveSession(res);
             this.props.history.push('/login');
+        })
+         .catch(function (err) {
+            notifications.handleError(err);
         });
     }
 
@@ -37,11 +43,12 @@ class Register extends React.Component {
         return errorState && errorState[name] && errorState[name][0];
     }
 
+    seePassword=()=>{
+        this.setState({hidden: !this.state.hidden})
+    }
 
     render() {
 
-        const usernameError = this.getFirstControlError('username');
-        const passwordError = this.getFirstControlError('password');
 
         return (
             <div>
@@ -54,14 +61,12 @@ class Register extends React.Component {
                             <h1>Register</h1>
                             <label className={styles.labels} htmlFor="username">Username</label>
                             <input className={styles.inputs} id="username" type="text" name="username" placeholder="Username" onChange={this.usernameOnChangeHandler} />
-                            {usernameError && <div className={styles.errors}>{usernameError}</div>}
+                           
 
                             <label className={styles.labels} htmlFor="password">Password</label>
                             <div className={styles['password-input']}>
-                                <input className={styles.inputs} id="password" type={this.state.hidden ? "password" : "text"} name="password" placeholder="●●●●●●●" onChange={this.passwordOnChangeHandler} />
-                                <i onClick={this.seePassword}></i>
+                                <input className={styles.inputs} id="password" type={"password" } name="password" placeholder="●●●●●●●" onChange={this.passwordOnChangeHandler} />
                             </div>
-                            {passwordError && <div className={styles.errors}>{passwordError}</div>}
                         </form>
                             <button className={styles['register-button']} type="button" onClick={this.submitHandler}>Register</button>
                         </div>
@@ -79,5 +84,4 @@ const initialFormState = {
 
 
 
-
-export default withForm(Register, initialFormState)
+export default withForm(Register,initialFormState)
