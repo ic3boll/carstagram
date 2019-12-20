@@ -1,9 +1,33 @@
 import React, { Component } from 'react';
-import styles from './style.module.css';
+import styles from './login.module.css';
 import Header from '../../header/header';
+import UserService from '../../services/user-services';
+import withForm from '../../shared/withForm';
 
 class Login extends Component {
   
+    componentDidMount() {
+        if (this.props.isLoged()) {
+            this.props.history.push('/');
+            return null;
+        }
+    }
+    usernameOnChangeHandler = this.props.controlChangeHandlerFactory('username');
+    passwordOnChangeHandler = this.props.controlChangeHandlerFactory('password');
+
+    submitHandler = (data) => {
+        const errors = this.props.getFormErrorState();
+        if (Object.keys(errors).length !== 0) { return; }
+       
+
+        UserService.login(data).then(() => {
+            this.props.history.push('/');
+        }).catch(error => {
+            if (typeof error === 'object') { throw error; }
+            this.setState({ error });
+        });
+    }
+
     render() {
   
         return (
@@ -32,4 +56,5 @@ class Login extends Component {
         )
     }
 }
-export default Login;
+
+export default withForm(Login, { username: '', password: '' });
