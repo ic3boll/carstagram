@@ -25,26 +25,14 @@ class Register extends React.Component {
     submitHandler = () => {
        
         const data = this.props.getFormState();
-     
-        UserService.register(data).then((res) => {
+       // const dataUsername = this.props.username;
+       // const dataPassword = this.props.password;
+        
+        UserService.register(data.username,data.password).then((res) => {
             UserService.saveSession(res);
             this.props.history.push('/login');
-        })
-         .catch(function (err) {
-            notifications.handleError(err);
         });
-    }
-
-    getFirstControlError = name => {
-        const errorState = this.props.getFormErrorState();
-        const data = this.props.getFormState();
-        if (data['password'] !== data['rePassword'])
-            errorState['rePassword'] = ['Password don\'t match!']
-        return errorState && errorState[name] && errorState[name][0];
-    }
-
-    seePassword=()=>{
-        this.setState({hidden: !this.state.hidden})
+        
     }
 
     render() {
@@ -61,11 +49,9 @@ class Register extends React.Component {
                             <h1>Register</h1>
                             <label className={styles.labels} htmlFor="username">Username</label>
                             <input className={styles.inputs} id="username" type="text" name="username" placeholder="Username" onChange={this.usernameOnChangeHandler} />
-                           
-
                             <label className={styles.labels} htmlFor="password">Password</label>
                             <div className={styles['password-input']}>
-                                <input className={styles.inputs} id="password" type={"password" } name="password" placeholder="●●●●●●●" onChange={this.passwordOnChangeHandler} />
+                            <input className={styles.inputs} id="password" type={"password" } name="password" placeholder="●●●●●●●" onChange={this.passwordOnChangeHandler} />
                             </div>
                         </form>
                             <button className={styles['register-button']} type="button" onClick={this.submitHandler}>Register</button>

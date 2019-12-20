@@ -15,14 +15,11 @@ class Login extends Component {
     usernameOnChangeHandler = this.props.controlChangeHandlerFactory('username');
     passwordOnChangeHandler = this.props.controlChangeHandlerFactory('password');
 
-    submitHandler = (data) => {
-       
-
-        UserService.login(data).then(() => {
+    submitHandler = () => {
+        const data = this.props.getFormState();
+        UserService.login(data.username,data.password).then((res) => {
+            UserService.saveSession(res);
             this.props.history.push('/');
-        }).catch(error => {
-            if (typeof error === 'object') { throw error; }
-            this.setState({ error });
         });
     }
 
@@ -43,10 +40,11 @@ class Login extends Component {
                         <input className={styles.inputs} type="text" name="username" placeholder="UserName" onChange={this.usernameOnChangeHandler} />
                         <div className={styles['password-input']}>
                         <label className={styles.labels} htmlFor="password">Password </label>
-                        <input className={styles.inputs} id="password" type={"password" } name="password" placeholder="*******"  />
+                        <input className={styles.inputs} id="password" type={"password" } name="password" placeholder="*******" onChange={this.passwordOnChangeHandler}  />
                         </div>
                         <button className={styles['login-button']} type="button" onClick={this.submitHandler}>Login</button>
                     </form>
+                    
                 </div>
             </div>
         </div>
